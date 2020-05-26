@@ -37,7 +37,7 @@ $("#submitBtn").on("click", ()=>{
 
     let country = "";
     $error.empty();
-    $results.empty();
+    $(".no").html("0");
     $("[role='status'").empty();
 
 // Search a country
@@ -59,13 +59,12 @@ if($("#searchField").val().length != 0){
         if(response.length == 0){
             $error.append("Country not found. Try again.")
         } else{
-            $results.append(`
-            <li class="country">Country: ${response[0].country}</li>
-            <li class="confirmed">Confirmed Cases: ${response[0].confirmed}</li>
-            <li class="critical">Crital: ${response[0].critical}</li>
-            <li class="deaths">Death:${response[0].deaths}</li>
-            <li class="recovered">Death:${response[0].recovered}</li>
-            `);
+            $("#country").html(response[0].country);
+            $("#confirmed").html(response[0].confirmed);
+            $("#active").html(response[0].confirmed - (response[0].recovered + response[0].critical + response[0].deaths));
+            $("#critical").html(response[0].critical);
+            $("#deaths").html(response[0].deaths);
+            $("#recovered").html(response[0].recovered);
         }
         console.log(response);
     }).catch((e) => {
