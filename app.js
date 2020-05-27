@@ -3,7 +3,6 @@
 // Get All Countries
 
 let countriesList = [];
-
 $.ajax({
 	"async": true,
 	"crossDomain": true,
@@ -21,6 +20,17 @@ $.ajax({
     // console.log(countriesList);
 });
 
+// Load Google Map
+async function initMap() {
+    let latLng = { lat: -33.8688, lng: 151.2093 };
+    map = new google.maps.Map(document.getElementById("map"), {
+        //GPS coordinate for map to centre on
+        // aprox level of details/ zoom: 1: World, 5:andmass/continent, 10:City, 15:Streets, 20:Buildings
+        center: latLng,
+        zoom: 1
+    });
+}
+    
 // Auto Suggest countries
 $(()=>{
     $("#searchField").autocomplete({
@@ -32,6 +42,7 @@ $(()=>{
 // On submit
 let $error = $(".error");
 let $results = $(".results");
+let $serachField = $("#searchField")
 
 $("#submitBtn").on("click", ()=>{
 
@@ -41,8 +52,8 @@ $("#submitBtn").on("click", ()=>{
     $("[role='status'").empty();
 
 // Search a country
-if($("#searchField").val().length != 0){
-    country = $("#searchField").val();
+if($serachField.val().length != 0){
+    country = $serachField.val();
 
     // Get API
     var settings = {
@@ -57,7 +68,7 @@ if($("#searchField").val().length != 0){
     }
     $.ajax(settings).done(function (response) {
         if(response.length == 0){
-            $error.append("Country not found. Try again.")
+            $error.append("Country not found. Try again.")                              // If result is empty
         } else{
             $("#country").html(response[0].country);
             $("#confirmed").html(response[0].confirmed);
@@ -65,17 +76,14 @@ if($("#searchField").val().length != 0){
             $("#critical").html(response[0].critical);
             $("#deaths").html(response[0].deaths);
             $("#recovered").html(response[0].recovered);
+            $($results).append(`<div class="hour">Updated last ${moment(response[0].lastChange).fromNow()}</div>`);
         }
         console.log(response);
     }).catch((e) => {
-        // console.log(e);
         $error.append("Oops! An Error Occurred. Something is broken. Please let us know what you were doing when this error occurred. We will fix it as soon as possible. Sorry for any inconvenience caused.")
     });
-
-// If sucess find the value in the name array
-
-// If sucess print the result
 } else{
     $error.append("Field is empty");
 }
+$serachField.val("");
 })
