@@ -51,7 +51,7 @@ $("#submitBtn").on("click", () => {
     $error.empty();
     $(".no").html("0");
     $("[role='status'").empty();
-    $(".hour").empty();
+    $(".hour").remove();
 
     // Search a country
     if ($serachField.val().length != 0) {
