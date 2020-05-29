@@ -92,6 +92,7 @@ $("#submitBtn").on("click", () => {
                 // info window when clicked
                 var infowindow = new google.maps.InfoWindow({
                     content: `<div>
+                    <img src="https://www.countryflags.io/${response[0].code}/shiny/64.png">
                     <p>${response[0].confirmed}<span> confirmed</span></p>
                     <p>${response[0].confirmed - (response[0].recovered + response[0].critical + response[0].deaths)}<span> active</span></p>
                     <p>${response[0].critical}<span> critical</span></p>
@@ -171,4 +172,8 @@ $(() => {
     <input class="answer" type="radio">
     <label>${myQuestions[0].answers.c}</label>
     </div>`);
+});
+
+$("input[type='radio']").on("click", ()=>{
+    $(".question").append("<p>Clicked!</p>");
 });
