@@ -3,7 +3,7 @@
 }
 
 body {
-    background-color: #C1C1C1;
+    background-color: #6B7A8F;
 }
 
 div {
@@ -34,3 +34,17 @@ table {
 span {
     font-weight: bold;
 }
+
+.ui-autocomplete {
+    max-height: 300px;
+    max-width: 350px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    background-color: whitesmoke;
+    color: black;
+  }
+
+  .gm-style-iw.gm-style-iw-c {
+      background-color: whitesmoke;
+  }
