@@ -46,7 +46,7 @@ let $results = $(".results");
 let $serachField = $("#searchField")
 
 $("#submitBtn").on("click", () => {
-   
+
     let country = "";
     $error.empty();
     $(".no").html("0");
@@ -98,21 +98,21 @@ $("#submitBtn").on("click", () => {
                     <p>${response[0].deaths}<span> deaths</span></p>
                     <p>${response[0].recovered}<span> recovered</span></p>   
                     </div>`
-                  });
-                
-                  marker.addListener('click', function() {
+                });
+
+                marker.addListener('click', function () {
                     infowindow.open(map, marker);
-                  });
-                
-            // // Fun little animation
-            //     marker.addListener('click', toggleBounce);
-            //     function toggleBounce() {
-            //         if (marker.getAnimation() !== null) {
-            //           marker.setAnimation(null);
-            //         } else {
-            //           marker.setAnimation(google.maps.Animation.BOUNCE);
-            //         }
-            //       }
+                });
+
+                // // Fun little animation
+                //     marker.addListener('click', toggleBounce);
+                //     function toggleBounce() {
+                //         if (marker.getAnimation() !== null) {
+                //           marker.setAnimation(null);
+                //         } else {
+                //           marker.setAnimation(google.maps.Animation.BOUNCE);
+                //         }
+                //       }
                 map.setCenter(marker.getPosition());
                 map.setZoom(4);
             }
@@ -125,3 +125,50 @@ $("#submitBtn").on("click", () => {
     }
     $serachField.val("");
 })
+
+// Quiz
+const myQuestions = [
+    {
+        question: "question 1",
+        answers: {
+            a: "answer a",
+            b: "answer b",
+            c: "answer c"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "question 2",
+        answers: {
+            a: "answer a",
+            b: "Tanswer b",
+            c: "answer c"
+        },
+        correctAnswer: "c"
+    },
+    {
+        question: "question 3",
+        answers: {
+            a: "answer a",
+            b: "answer b",
+            c: "answer c",
+        },
+        correctAnswer: "a"
+    }
+];
+
+$(() => {
+    $(".question").append(`<p>${myQuestions[0].question}</p>
+    <div class="answerA">
+    <input class="answer" type="radio">
+    <label>${myQuestions[0].answers.a}</label>
+    </div>
+    <div class="answerB">
+    <input class="answer" type="radio">
+    <label>${myQuestions[0].answers.b}</label>
+    </div>
+    <div class="answerC">
+    <input class="answer" type="radio">
+    <label>${myQuestions[0].answers.c}</label>
+    </div>`);
+});

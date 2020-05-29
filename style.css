@@ -47,4 +47,9 @@ span {
 
   .gm-style-iw.gm-style-iw-c {
       background-color: whitesmoke;
+      text-align: center;
+  }
+
+  h3 {
+    font-family: 'Playfair Display', serif;
   }
