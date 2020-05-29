@@ -46,7 +46,7 @@ let $results = $(".results");
 let $serachField = $("#searchField")
 
 $("#submitBtn").on("click", () => {
-
+   
     let country = "";
     $error.empty();
     $(".no").html("0");
@@ -80,12 +80,39 @@ $("#submitBtn").on("click", () => {
                 $("#recovered").html(response[0].recovered);
                 $($results).append(`<div class="hour">Updated last ${moment(response[0].lastChange).fromNow()}</div>`);
 
+                // clear previous marker
+                // if (markers.length != 0){markers.setMap(null);}  // figure out how to clear the previous markers
                 // add marker
                 var marker = new google.maps.Marker({
                     position: { lat: response[0].latitude, lng: response[0].longitude },
                     map: map,
                     title: 'Hello World!',
                 });
+
+                // info window when clicked
+                var infowindow = new google.maps.InfoWindow({
+                    content: `<div>
+                    <p>${response[0].confirmed}<span> confirmed</span></p>
+                    <p>${response[0].confirmed - (response[0].recovered + response[0].critical + response[0].deaths)}<span> active</span></p>
+                    <p>${response[0].critical}<span> critical</span></p>
+                    <p>${response[0].deaths}<span> deaths</span></p>
+                    <p>${response[0].recovered}<span> recovered</span></p>   
+                    </div>`
+                  });
+                
+                  marker.addListener('click', function() {
+                    infowindow.open(map, marker);
+                  });
+                
+            // // Fun little animation
+            //     marker.addListener('click', toggleBounce);
+            //     function toggleBounce() {
+            //         if (marker.getAnimation() !== null) {
+            //           marker.setAnimation(null);
+            //         } else {
+            //           marker.setAnimation(google.maps.Animation.BOUNCE);
+            //         }
+            //       }
                 map.setCenter(marker.getPosition());
                 map.setZoom(4);
             }

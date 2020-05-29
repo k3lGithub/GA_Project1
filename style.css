@@ -30,3 +30,7 @@ table {
 #map {
     min-height: 500px;
 }
+
+span {
+    font-weight: bold;
+}
