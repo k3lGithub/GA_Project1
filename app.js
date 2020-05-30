@@ -163,31 +163,36 @@ const myQuestions = [
 
 // show questions - Work on how to rolate questions later
 
-// on ready
+let count = 0;
 $(() => {
-    $(".question").append(`<p>${myQuestions[0].question}</p>
+    prepareQuiz(count);
+    startQuiz(count);
+})
+
+// on ready
+let prepareQuiz = (count) => {
+    $(".question").html(`<p>${myQuestions[count].question}</p>
     <div class="answers" id="a">
     <input type="radio" value="a">
-    <label>${myQuestions[0].answers.a}</label>
+    <label>${myQuestions[count].answers.a}</label>
     </div>
     <div class="answers" id="b">
     <input type="radio" value="b">
-    <label>${myQuestions[0].answers.b}</label>
+    <label>${myQuestions[count].answers.b}</label>
     </div>
     <div class="answers" id="c">
     <input type="radio" value="c">
-    <label>${myQuestions[0].answers.c}</label>
+    <label>${myQuestions[count].answers.c}</label>
     </div>
   `);
-    // $(".next").prop("disabled", true);
-    startQuiz();
+    $(".next").prop("disabled", true);
     console.log($('.radioInput').length);
-});
+};
 
 // click answer - disable all other answers and show results , display explaination and color
 
 // Click > disable all other answers
-function startQuiz() {
+function startQuiz(count) {
     let radioBtns = $('input[type="radio"]');
 
     // click any radio
@@ -198,42 +203,33 @@ function startQuiz() {
         // get current answer - CLEAN UP to make it DRY
         currentRadio = e.target;
         console.log(currentRadio.value);
+
         // check if answeser is correct, if yes current radio turns green and display Correct or tick
-        if (currentRadio.value == myQuestions[0].correctAnswer) {
+        if (currentRadio.value == myQuestions[count].correctAnswer) {
             $(`#${currentRadio.value}`).addClass("correct-answer");
             //display explaination - how back when at step to roate the questions to display sepcfic ansser explaination
             explain("Correct");
         }
+
         // else current radio turns red and display Flase or cross & correct answer turns green
         else {
             $(`#${currentRadio.value}`).addClass("wrong-answer");
-            $(`#${myQuestions[0].correctAnswer}`).addClass("correct-answer");
+            $(`#${myQuestions[count].correctAnswer}`).addClass("correct-answer");
             explain("Wrong");
         }
-
-        $(".next").prop("disabled", false);   // enable next button
-
-        function explain(status) {
-            $(".question").append(`<p>${status}! ${myQuestions[0].explain}</p>`);
+        if (count <= 1) {
+            $(".next").prop("disabled", false);   // enable next button
+            //click next
+            $(".next").on("click", (e) => {
+                count++
+                console.log(count);
+                // Work out how to start again with next question
+            })
         }
     })
     )
+}
 
-    // click next and when question is finished, stop
-    let count = 0;
-
-
-    $(".next").on("click", (e) => {
-
-        //action
-        count++
-        if (count <= 2) {
-
-            console.log("Next Clicked!")
-            console.log(count);
-        } else {
-            $(".next").prop("disabled", false);
-        }
-    }
-    )
+function explain(status) {
+    $(".question").append(`<p>${status}! ${myQuestions[count].explain}</p>`);
 }
