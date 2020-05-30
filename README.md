@@ -13,17 +13,18 @@
 - Field validations
 - Visual data presenation in table format
 - Google Map
- - Focus view with markers
- - Information Window on click
- - Marker Animation
+  - Focus view with markers
+  - Information Window on click
+  - Marker Animation
 - Quiz
- - Displays answers on click
+  - Displays answers on click
 
 ### Challenges and Improvements
-- API account limitation to getDialyReportAllCountries
-- faced challenge finding radio button element to disable all. Current Solution: called function inside "on ready" function for element to be ready
-- faced challenge repeating all quiz question sets. Current Solution: provided index and seperated 2 functions for initial preparation and to prepare next question
-- further enhancement can be done to
- - remove previous markers on map
- - explore the use of local storage
- - previous and next quiz flow
+* API account limitation to getDialyReportAllCountries
+* *Challenge* faced in finding radio button element to disable all. *Current Solution:* called function inside "on ready" function for element to be ready
+* *Challenge* faced in repeating all quiz question sets. *Current Solution:* provided index and seperated 2 functions for initial preparation and to prepare next question
+* Further *Improvements* can be done to
+  * remove previous markers on map
+  * explore the use of local storage
+  * previous and next quiz flow
+
