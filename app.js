@@ -207,9 +207,12 @@ function startQuiz() {
             $(`#${currentRadio.value}`).css("background-color", "palegreen");
             //display explaination - how back when at step to roate the questions to display sepcfic ansser explaination
             $(".question").append(`<p>Correct! ${myQuestions[0].explain}</p>`);
-        } else {
-            $(`#${currentRadio.value}`).css("background-color", "salmon");
-        }
+        } 
         // else current radio turns red and display Flase or cross & correct answer turns green
+        else {
+            $(`#${currentRadio.value}`).css("background-color", "salmon");
+            $(`#${myQuestions[0].correctAnswer}`).css("background-color", "palegreen");
+            $(".question").append(`<p>Wrong! ${myQuestions[0].explain}</p>`);
+        }
     }))
 }
