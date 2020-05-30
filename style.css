@@ -53,3 +53,11 @@ span {
   h3 {
     font-family: 'Playfair Display', serif;
   }
+
+  #a {
+      background-color: salmon;
+  }
+
+  #b {
+      background-color: palegreen;
+  }

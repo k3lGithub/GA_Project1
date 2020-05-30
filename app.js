@@ -86,7 +86,7 @@ $("#submitBtn").on("click", () => {
                 var marker = new google.maps.Marker({
                     position: { lat: response[0].latitude, lng: response[0].longitude },
                     map: map,
-                    title: 'Hello World!',
+                    title: response[0].country,
                 });
 
                 // info window when clicked
@@ -105,15 +105,15 @@ $("#submitBtn").on("click", () => {
                     infowindow.open(map, marker);
                 });
 
-                // // Fun little animation
-                //     marker.addListener('click', toggleBounce);
-                //     function toggleBounce() {
-                //         if (marker.getAnimation() !== null) {
-                //           marker.setAnimation(null);
-                //         } else {
-                //           marker.setAnimation(google.maps.Animation.BOUNCE);
-                //         }
-                //       }
+                // Fun little animation
+                    marker.addListener('click', toggleBounce);
+                    function toggleBounce() {
+                        if (marker.getAnimation() !== null) {
+                          marker.setAnimation(null);
+                        } else {
+                          marker.setAnimation(google.maps.Animation.BOUNCE);
+                        }
+                      }
                 map.setCenter(marker.getPosition());
                 map.setZoom(4);
             }
@@ -136,7 +136,8 @@ const myQuestions = [
             b: "answer b",
             c: "answer c"
         },
-        correctAnswer: "c"
+        correctAnswer: "c",
+        explain: "Explain a"
     },
     {
         question: "question 2",
@@ -145,7 +146,8 @@ const myQuestions = [
             b: "Tanswer b",
             c: "answer c"
         },
-        correctAnswer: "c"
+        correctAnswer: "c",
+        explain: "Explain b"
     },
     {
         question: "question 3",
@@ -154,26 +156,44 @@ const myQuestions = [
             b: "answer b",
             c: "answer c",
         },
-        correctAnswer: "a"
+        correctAnswer: "a",
+        explain: "Explain b"
     }
 ];
 
+// show questions - Work on how to rolate questions later
+
+// on ready
 $(() => {
     $(".question").append(`<p>${myQuestions[0].question}</p>
-    <div class="answerA">
-    <input class="answer" type="radio">
+    <div class="answers" id="a">
+    <input type="radio">
     <label>${myQuestions[0].answers.a}</label>
     </div>
-    <div class="answerB">
-    <input class="answer" type="radio">
+    <div class="answers" id="b">
+    <input type="radio">
     <label>${myQuestions[0].answers.b}</label>
     </div>
-    <div class="answerC">
-    <input class="answer" type="radio">
+    <div class="answers" id="c">
+    <input type="radio">
     <label>${myQuestions[0].answers.c}</label>
-    </div>`);
+    </div>
+  `);
+  startQuiz();
+  console.log($('.radioInput').length);
 });
 
-$("input[type='radio']").on("click", ()=>{
-    $(".question").append("<p>Clicked!</p>");
-});
+// click answer - disable all other answers and show results , display explaination and color
+
+// Click > disable all other answers
+function startQuiz(){
+    $('input[type="radio"]').on("click", ()=>{
+        $(".question").append(`<p>${myQuestions[0].explain}</p>`);
+        console.log($(".question"))
+    });
+    let radioBtns = $('input[type="radio"]');
+    console.log(radioBtns);
+    $(radioBtns).on("click", () =>{
+        $(radioBtns).attr("disabled", true);
+    })
+}
