@@ -179,6 +179,7 @@ $(() => {
     <label>${myQuestions[0].answers.c}</label>
     </div>
   `);
+    // $(".next").prop("disabled", true);
     startQuiz();
     console.log($('.radioInput').length);
 });
@@ -189,30 +190,50 @@ $(() => {
 function startQuiz() {
     let radioBtns = $('input[type="radio"]');
 
-
-
     // click any radio
     $(radioBtns.on("click", (e) => {
         console.log(e);
-        // disable them all 
-        $(radioBtns).attr("disabled", true);
+        $(radioBtns).attr("disabled", true);  // disable all radio buttons
 
-
-
-        // get current answer
+        // get current answer - CLEAN UP to make it DRY
         currentRadio = e.target;
         console.log(currentRadio.value);
         // check if answeser is correct, if yes current radio turns green and display Correct or tick
         if (currentRadio.value == myQuestions[0].correctAnswer) {
-            $(`#${currentRadio.value}`).css("background-color", "palegreen");
+            $(`#${currentRadio.value}`).addClass("correct-answer");
             //display explaination - how back when at step to roate the questions to display sepcfic ansser explaination
-            $(".question").append(`<p>Correct! ${myQuestions[0].explain}</p>`);
-        } 
+            explain("Correct");
+        }
         // else current radio turns red and display Flase or cross & correct answer turns green
         else {
-            $(`#${currentRadio.value}`).css("background-color", "salmon");
-            $(`#${myQuestions[0].correctAnswer}`).css("background-color", "palegreen");
-            $(".question").append(`<p>Wrong! ${myQuestions[0].explain}</p>`);
+            $(`#${currentRadio.value}`).addClass("wrong-answer");
+            $(`#${myQuestions[0].correctAnswer}`).addClass("correct-answer");
+            explain("Wrong");
         }
-    }))
+
+        $(".next").prop("disabled", false);   // enable next button
+
+        function explain(status) {
+            $(".question").append(`<p>${status}! ${myQuestions[0].explain}</p>`);
+        }
+    })
+    )
+
+    // click next and when question is finished, stop
+    let count = 0;
+
+
+    $(".next").on("click", (e) => {
+
+        //action
+        count++
+        if (count <= 2) {
+
+            console.log("Next Clicked!")
+            console.log(count);
+        } else {
+            $(".next").prop("disabled", false);
+        }
+    }
+    )
 }

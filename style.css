@@ -54,10 +54,14 @@ span {
     font-family: 'Playfair Display', serif;
   }
 
-  /* #a {
+  .wrong-answer {
       background-color: salmon;
   }
 
-  #b {
+  .correct-answer {
       background-color: palegreen;
-  } */
+  }
+
+  .next {
+      float: right;
+  }
