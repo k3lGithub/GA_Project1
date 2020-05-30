@@ -187,13 +187,19 @@ $(() => {
 
 // Click > disable all other answers
 function startQuiz(){
-    $('input[type="radio"]').on("click", ()=>{
-        $(".question").append(`<p>${myQuestions[0].explain}</p>`);
-        console.log($(".question"))
-    });
     let radioBtns = $('input[type="radio"]');
-    console.log(radioBtns);
-    $(radioBtns).on("click", () =>{
+
+    // click any radio
+    $(radioBtns.on("click", ()=>{
+
+        // disable them all 
         $(radioBtns).attr("disabled", true);
-    })
+        
+        //display explaination
+        $(".question").append(`<p>${myQuestions[0].explain}</p>`);
+
+        // get current answer
+        // check if answeser is correct, if yes current radio turns green and display Correct or tick
+        // else current radio turns red and display Flase or cross & correct answer turns green
+    }))
 }
