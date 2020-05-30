@@ -21,9 +21,9 @@
 
 ### Challenges and Improvements
 * API account limitation to getDialyReportAllCountries
-* *Challenge* faced in finding radio button element to disable all. *Current Solution:* called function inside "on ready" function for element to be ready
-* *Challenge* faced in repeating all quiz question sets. *Current Solution:* provided index and seperated 2 functions for initial preparation and to prepare next question
-* Further *Improvements* can be done to
+* **Challenge** faced in finding radio button element to disable all. **Current Solution:** called function inside "on ready" function for element to be ready
+* **Challenge** faced in repeating all quiz question sets. **Current Solution:** provided index and seperated 2 functions for initial preparation and to prepare next question
+* Further **Improvements** can be done to
   * remove previous markers on map
   * explore the use of local storage
   * previous and next quiz flow
