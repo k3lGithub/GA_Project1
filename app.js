@@ -106,14 +106,14 @@ $("#submitBtn").on("click", () => {
                 });
 
                 // Fun little animation
-                    marker.addListener('click', toggleBounce);
-                    function toggleBounce() {
-                        if (marker.getAnimation() !== null) {
-                          marker.setAnimation(null);
-                        } else {
-                          marker.setAnimation(google.maps.Animation.BOUNCE);
-                        }
-                      }
+                marker.addListener('click', toggleBounce);
+                function toggleBounce() {
+                    if (marker.getAnimation() !== null) {
+                        marker.setAnimation(null);
+                    } else {
+                        marker.setAnimation(google.maps.Animation.BOUNCE);
+                    }
+                }
                 map.setCenter(marker.getPosition());
                 map.setZoom(4);
             }
@@ -167,39 +167,49 @@ const myQuestions = [
 $(() => {
     $(".question").append(`<p>${myQuestions[0].question}</p>
     <div class="answers" id="a">
-    <input type="radio">
+    <input type="radio" value="a">
     <label>${myQuestions[0].answers.a}</label>
     </div>
     <div class="answers" id="b">
-    <input type="radio">
+    <input type="radio" value="b">
     <label>${myQuestions[0].answers.b}</label>
     </div>
     <div class="answers" id="c">
-    <input type="radio">
+    <input type="radio" value="c">
     <label>${myQuestions[0].answers.c}</label>
     </div>
   `);
-  startQuiz();
-  console.log($('.radioInput').length);
+    startQuiz();
+    console.log($('.radioInput').length);
 });
 
 // click answer - disable all other answers and show results , display explaination and color
 
 // Click > disable all other answers
-function startQuiz(){
+function startQuiz() {
     let radioBtns = $('input[type="radio"]');
 
-    // click any radio
-    $(radioBtns.on("click", ()=>{
 
+
+    // click any radio
+    $(radioBtns.on("click", (e) => {
+        console.log(e);
         // disable them all 
         $(radioBtns).attr("disabled", true);
-        
-        //display explaination
-        $(".question").append(`<p>${myQuestions[0].explain}</p>`);
+
+
 
         // get current answer
+        currentRadio = e.target;
+        console.log(currentRadio.value);
         // check if answeser is correct, if yes current radio turns green and display Correct or tick
+        if (currentRadio.value == myQuestions[0].correctAnswer) {
+            $(`#${currentRadio.value}`).css("background-color", "palegreen");
+            //display explaination - how back when at step to roate the questions to display sepcfic ansser explaination
+            $(".question").append(`<p>Correct! ${myQuestions[0].explain}</p>`);
+        } else {
+            $(`#${currentRadio.value}`).css("background-color", "salmon");
+        }
         // else current radio turns red and display Flase or cross & correct answer turns green
     }))
 }
