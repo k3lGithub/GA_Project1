@@ -1,9 +1,11 @@
-// Refactor and seperate after
-
-// Get All Countries
+// ====================================== Map Start ======================================
 
 let countriesList = [];
+let $error = $(".error");
+let $results = $(".results");
+let $serachField = $("#searchField");
 
+// Get All Countries
 $.ajax({
     "async": true,
     "crossDomain": true,
@@ -13,45 +15,29 @@ $.ajax({
         "x-rapidapi-host": "covid-19-data.p.rapidapi.com",
         "x-rapidapi-key": "f61dae476fmsha5531a1479de271p1cc549jsn9081e48db9e3"
     }
-}).done(function (response) {
-    $(response).each((i, v) => {
+}).done(function (r) {
+    $(r).each((i, v) => {
         countriesList.push(v.name);
     })
-    // console.log(response);
-    // console.log(countriesList);
+    // console.log(r);
+    $("#searchField").autocomplete({            // Auto Suggest countries
+        source: countriesList
+    });
 });
 
 // Load Google Map
 async function initMap() {
-
     map = new google.maps.Map(document.getElementById("map"), {
-        //GPS coordinate for map to centre on
-        // aprox level of details/ zoom: 1: World, 5:andmass/continent, 10:City, 15:Streets, 20:Buildings
         center: { lat: -33.8688, lng: 151.2093 },
         zoom: 1
     });
 }
 
-// Auto Suggest countries
-$(() => {
-    $("#searchField").autocomplete({
-        source: countriesList
-    });
-});
-
-
-// On submit
-let $error = $(".error");
-let $results = $(".results");
-let $serachField = $("#searchField")
-
+// Get Countries details on submit
 $("#submitBtn").on("click", () => {
-
     let country = "";
-    $error.empty();
-    $(".no").html("0");
-    $("[role='status'").empty();
-    $(".hour").remove();
+
+    clearPreviousData();
 
     // Search a country
     if ($serachField.val().length != 0) {
@@ -68,45 +54,32 @@ $("#submitBtn").on("click", () => {
                 "x-rapidapi-key": "f61dae476fmsha5531a1479de271p1cc549jsn9081e48db9e3"
             }
         }
-        $.ajax(settings).done(function (response) {
-            if (response.length == 0) {
+        $.ajax(settings).done(function (r) {
+            let data = r[0];
+            if (r.length === 0) {
                 $error.append("Country not found. Try again.")                              // If result is empty
             } else {
-                $("#country").html(response[0].country);
-                $("#confirmed").html(response[0].confirmed);
-                $("#active").html(response[0].confirmed - (response[0].recovered + response[0].critical + response[0].deaths));
-                $("#critical").html(response[0].critical);
-                $("#deaths").html(response[0].deaths);
-                $("#recovered").html(response[0].recovered);
-                $($results).append(`<div class="hour">Updated last ${moment(response[0].lastChange).fromNow()}</div>`);
+                $("#country").html(data.country);
+                $("#confirmed").html(data.confirmed);
+                $("#active").html(data.confirmed - (data.recovered + data.critical + data.deaths));
+                $("#critical").html(data.critical);
+                $("#deaths").html(data.deaths);
+                $("#recovered").html(data.recovered);
+                $($results).append(`<div class="hour">Updated last ${moment(data.lastChange).fromNow()}</div>`);
 
                 // clear previous marker
-                // if (markers.length != 0){markers.setMap(null);}  // figure out how to clear the previous markers
+                // *********************************** if (markers.length != 0){markers.setMap(null);}  // figure out how to clear the previous markers 
+
                 // add marker
                 var marker = new google.maps.Marker({
-                    position: { lat: response[0].latitude, lng: response[0].longitude },
+                    position: { lat: data.latitude, lng: data.longitude },
                     map: map,
-                    title: response[0].country,
+                    title: data.country,
                 });
 
-                // info window when clicked
-                var infowindow = new google.maps.InfoWindow({
-                    content: `<div>
-                    <img src="https://www.countryflags.io/${response[0].code}/shiny/64.png">
-                    <p>${response[0].confirmed}<span> confirmed</span></p>
-                    <p>${response[0].confirmed - (response[0].recovered + response[0].critical + response[0].deaths)}<span> active</span></p>
-                    <p>${response[0].critical}<span> critical</span></p>
-                    <p>${response[0].deaths}<span> deaths</span></p>
-                    <p>${response[0].recovered}<span> recovered</span></p>   
-                    </div>`
-                });
+                setInfoWindow(data, map, marker);           // info window when clicked
 
-                marker.addListener('click', function () {
-                    infowindow.open(map, marker);
-                });
-
-                // Fun little animation
-                marker.addListener('click', toggleBounce);
+                marker.addListener('click', toggleBounce);      // Fun little animation
                 function toggleBounce() {
                     if (marker.getAnimation() !== null) {
                         marker.setAnimation(null);
@@ -117,119 +90,155 @@ $("#submitBtn").on("click", () => {
                 map.setCenter(marker.getPosition());
                 map.setZoom(4);
             }
-            console.log(response);
+            // console.log(r);
         }).catch((e) => {
             $error.append("Oops! An Error Occurred. Something is broken. Please let us know what you were doing when this error occurred. We will fix it as soon as possible. Sorry for any inconvenience caused.")
         });
     } else {
-        $error.append("Field is empty");
+        $error.append("Field is empty");                    // validation
     }
-    $serachField.val("");
+    $serachField.val("");                                   // reset search
 })
 
+// ====================================== Map Functions ======================================
+
+function setInfoWindow(data, map, marker) {
+    let infowindow = new google.maps.InfoWindow({
+        content: `
+        <div>
+           <img src="https://www.countryflags.io/${data.code}/shiny/64.png">
+           <p>${data.confirmed}<span> confirmed</span></p>
+           <p>${data.confirmed - (data.recovered + data.critical + data.deaths)}<span> active</span></p>
+           <p>${data.critical}<span> critical</span></p>
+           <p>${data.deaths}<span> deaths</span></p>
+           <p>${data.recovered}<span> recovered</span></p>
+        </div>
+        `
+    });
+
+    marker.addListener('click', function () {
+        infowindow.open(map, marker);
+    });
+}
+
+let clearPreviousData = () => {
+    $error.empty();
+    $("#country").html("Coutnry");
+    $(".no").html("0");
+    $("[role='status'").empty();
+    $(".hour").remove();
+}
+
+// ====================================== Map Finish ======================================
 // Quiz
 const myQuestions = [
     {
-        question: "question 1",
-        answers: {
-            a: "answer a",
-            b: "answer b",
-            c: "answer c"
+        ques: "What are the most common symptoms of COVID-19?",
+        ans: {
+            a: "Sneezing and a runny nose.",
+            b: "Chest pains and fever.",
+            c: "High temperature, cough and tiredness."
         },
-        correctAnswer: "c",
-        explain: "Explain a"
+        correctAns: "c",
+        explain: "The most common symptoms of COVID-19 are fever, tiredness, and a dry cough. It’s less common for people to experience sneezing and a runny nose. There is no suggestion that chest pains or vomiting are associated with the virus."
     },
     {
-        question: "question 2",
-        answers: {
-            a: "answer a",
-            b: "Tanswer b",
-            c: "answer c"
+        ques: "How long can the virus survive on plastic and stainless steel surfaces, according to studies?",
+        ans: {
+            a: "72 hours or more",
+            b: "24 to 60 hours",
+            c: "4 to 12 hours"
         },
-        correctAnswer: "c",
-        explain: "Explain b"
+        correctAns: "a",
+        explain: "Yes, it has been detected on a surface up to three days after initial contamination according to one study - and as long as seven days according to another. That's why it is important to keep washing your hands, and to avoid touching your face as much as possible"
     },
     {
-        question: "question 3",
-        answers: {
-            a: "answer a",
-            b: "answer b",
-            c: "answer c",
+        ques: "What is more effective at removing the coronavirus from your hands",
+        ans: {
+            a: "Alcohol-based hand sanitiser",
+            b: "Soap and water",
+            c: "hot water"
         },
-        correctAnswer: "a",
-        explain: "Explain b"
+        correctAns: "b",
+        explain: "Soap loosens the lipids in the virus membrane, causing its structure to collapse and making the virus inactive. Alcohol-based hand sanitiser is still useful for removing the virus if soap and warm water is unavailable, but it is not as effective"
     }
 ];
 
-// show questions - Work on how to rolate questions later
-
 let count = 0;
-$(() => {
-    prepareQuiz(count);
-    startQuiz(count);
-})
+let currentQues = myQuestions[count];
 
 // on ready
+$(() => {
+    prepareNext(count);
+})
+
+function prepareNext(count) {
+    prepareQuiz(count);
+    startQuiz(count);
+}
+
+// Show Questions
 let prepareQuiz = (count) => {
-    $(".question").html(`<p>${myQuestions[count].question}</p>
+    $(".question").html(`
+    <p>${myQuestions[count].ques}</p>
     <div class="answers" id="a">
-    <input type="radio" value="a">
-    <label>${myQuestions[count].answers.a}</label>
+       <input type="radio" value="a">
+       <label>${myQuestions[count].ans.a}</label>
     </div>
     <div class="answers" id="b">
-    <input type="radio" value="b">
-    <label>${myQuestions[count].answers.b}</label>
+       <input type="radio" value="b">
+       <label>${myQuestions[count].ans.b}</label>
     </div>
     <div class="answers" id="c">
-    <input type="radio" value="c">
-    <label>${myQuestions[count].answers.c}</label>
+       <input type="radio" value="c">
+       <label>${myQuestions[count].ans.c}</label>
     </div>
   `);
     $(".next").prop("disabled", true);
-    console.log($('.radioInput').length);
 };
 
-// click answer - disable all other answers and show results , display explaination and color
+// click answer
 
-// Click > disable all other answers
+// Click - disable all other answers
 function startQuiz(count) {
     let radioBtns = $('input[type="radio"]');
 
     // click any radio
     $(radioBtns.on("click", (e) => {
-        console.log(e);
+        // console.log(e);
         $(radioBtns).attr("disabled", true);  // disable all radio buttons
 
-        // get current answer - CLEAN UP to make it DRY
+        // get current answer
         currentRadio = e.target;
-        console.log(currentRadio.value);
 
-        // check if answeser is correct, if yes current radio turns green and display Correct or tick
-        if (currentRadio.value == myQuestions[count].correctAnswer) {
+        // check if answer is correct, if yes current radio turns green and display Correct
+        if (currentRadio.value == myQuestions[count].correctAns) {
             $(`#${currentRadio.value}`).addClass("correct-answer");
-            //display explaination - how back when at step to roate the questions to display sepcfic ansser explaination
-            explain("Correct");
+            explain("Correct", count);
         }
 
-        // else current radio turns red and display Flase or cross & correct answer turns green
+        // else current radio turns red and display correct answer
         else {
             $(`#${currentRadio.value}`).addClass("wrong-answer");
-            $(`#${myQuestions[count].correctAnswer}`).addClass("correct-answer");
-            explain("Wrong");
+            $(`#${myQuestions[count].correctAns}`).addClass("correct-answer");
+            explain("Wrong", count);
         }
-        if (count <= 1) {
+
+        if (count < 2) {
             $(".next").prop("disabled", false);   // enable next button
             //click next
             $(".next").on("click", (e) => {
-                count++
-                console.log(count);
-                // Work out how to start again with next question
+                count++;
+                prepareNext(count);
             })
-        }
+        } 
+        // else {
+        //     alert("Quiz Finished!");
+        // }
     })
     )
 }
 
-function explain(status) {
-    $(".question").append(`<p>${status}! ${myQuestions[count].explain}</p>`);
+function explain(status, count) {
+    $(".question").append(`<p class="explain">${status}! ${myQuestions[count].explain}</p>`);
 }
