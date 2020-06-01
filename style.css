@@ -1,0 +1,67 @@
+.error {
+    color: purple;
+}
+
+body {
+    background-color: #6B7A8F;
+}
+
+div {
+    padding: 0.8em;
+}
+
+table, th, td {
+    border: 1px solid black;
+  }
+
+table {
+    text-align: center;
+}
+
+.bg-info{
+    background-color: grey;
+}
+
+.hour{
+    font-size: 0.8em;
+    font-weight: 500;
+}
+
+#map {
+    min-height: 500px;
+}
+
+span {
+    font-weight: bold;
+}
+
+.ui-autocomplete {
+    max-height: 300px;
+    max-width: 350px;
+    overflow-y: auto;
+    /* prevent horizontal scrollbar */
+    overflow-x: hidden;
+    background-color: whitesmoke;
+    color: black;
+  }
+
+  .gm-style-iw.gm-style-iw-c {
+      background-color: whitesmoke;
+      text-align: center;
+  }
+
+  h3 {
+    font-family: 'Playfair Display', serif;
+  }
+
+  .wrong-answer {
+      background-color: salmon;
+  }
+
+  .correct-answer {
+      background-color: palegreen;
+  }
+
+  .next {
+      float: right;
+  }
