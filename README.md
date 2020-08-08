@@ -1,4 +1,4 @@
-# GA_Project1: My first application
+# Project1: My first application
 
 
 ### Summary:
